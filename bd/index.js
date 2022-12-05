@@ -43,4 +43,28 @@ app.get("/", cors(), async (req, res) => {
   }
 });
 
+app.get("/libro/:id", cors(), async (req, res) => {
+  try {
+    const id = req.params.id;
+    console.log(id + " ESOT ES MI ID");
+    const empeladoss = await pool.query(
+      "select * from libros where codigo = $1 ",
+      [id]
+    );
+    res.json(empeladoss.rows);
+    console.log(empeladoss.rows);
+  } catch (error) {
+    console.log("ERROR", error);
+  }
+});
+app.post("libro/:titulo/:autor/:editorial", cors(), async (req, res) => {
+  const titulo = req.params.titulo;
+  const autor = req.params.autor;
+  const editorial = req.params.editorial;
+  const user = await pool.query(
+    "insert into libros (titulo,autor,editorial)values($1,$2,$3);",
+    [titulo, autor, editorial]
+  );
+  res.json("OK")
+});
 app.listen(PORT, () => console.log("servidor activo: " + PORT));
